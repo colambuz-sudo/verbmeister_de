@@ -1,4 +1,7 @@
-const tg = window.Telegram.WebApp;
+const tg = window.Telegram?.WebApp || {
+    expand() {},
+    HapticFeedback: null
+};
 tg.expand();
 
 let verbs = [];
@@ -8,7 +11,7 @@ let score = 0;
 async function init() {
     try {
         // Пытаемся загрузить JSON
-        const response = await fetch('verbs_tab.json');
+        const response = await fetch('verbs_tab.json?v=20260513-1', { cache: 'no-store' });
         if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
