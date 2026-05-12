@@ -21,7 +21,7 @@ let wrongAnswers = [];
 
 async function init() {
     try {
-        const response = await fetch('verbs_tab.json?v=20260513-2', { cache: 'no-store' });
+        const response = await fetch('verbs_tab.json?v=20260513-3', { cache: 'no-store' });
         if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
@@ -40,10 +40,27 @@ function showHome() {
         <p>Выбери викторину</p>
         <button class="option-btn" id="forms-quiz">${QUIZ_TITLES.forms}</button>
         <button class="option-btn" id="translation-quiz">${QUIZ_TITLES.translation}</button>
+        <button class="option-btn" id="help-btn">❓ Помощь</button>
     `;
 
     document.getElementById('forms-quiz').onclick = () => startQuiz('forms');
     document.getElementById('translation-quiz').onclick = () => startQuiz('translation');
+    document.getElementById('help-btn').onclick = showHelp;
+}
+
+function showHelp() {
+    const container = document.getElementById('question-area');
+    container.innerHTML = `
+        <div class="verb-infinitive">Помощь</div>
+        <p><strong>${QUIZ_TITLES.forms}</strong><br>
+        Вы видите инфинитив и выбираете правильные формы Präteritum и Partizip II.</p>
+        <p><strong>${QUIZ_TITLES.translation}</strong><br>
+        Вы видите русский перевод и выбираете строку со всеми тремя немецкими формами.</p>
+        <p>В каждой викторине 15 случайных глаголов. После ответа показываются правильные формы и перевод, в конце - результат и список ошибок.</p>
+        <button class="option-btn" id="home-btn">Домой</button>
+    `;
+
+    document.getElementById('home-btn').onclick = showHome;
 }
 
 function startQuiz(type) {
