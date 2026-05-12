@@ -7,15 +7,21 @@ let score = 0;
 
 async function init() {
     try {
+        // Пытаемся загрузить JSON
         const response = await fetch('verbs_tab.json');
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
         verbs = await response.json();
         nextQuestion();
     } catch (e) {
-        document.getElementById('question-area').innerText = "Fehler beim Laden der Verben.";
+        console.error(e);
+        document.getElementById('question-area').innerText = `Fehler: ${e.message}. Проверьте, что verbs_tab.json загружен на GitHub.`;
     }
 }
 
 function nextQuestion() {
+    if (verbs.length === 0) return;
     currentVerb = verbs[Math.floor(Math.random() * verbs.length)];
     const options = generateOptions(currentVerb);
     
@@ -48,10 +54,10 @@ function generateOptions(correctVerb) {
 function checkAnswer(selected) {
     if (selected === currentVerb.correct) {
         score++;
-        tg.HapticFeedback.notificationOccurred('success');
+        if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
         nextQuestion();
     } else {
-        tg.HapticFeedback.notificationOccurred('error');
+        if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
         alert(`Falsch! Richtig ist: ${currentVerb.correct}`);
         nextQuestion();
     }
